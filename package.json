@@ -1,0 +1,30 @@
+{
+  "name": "promax-digital-royal-website",
+  "version": "0.1.0",
+  "description": "A modern, sophisticated digital presence for Royal initiatives",
+  "main": "index.js",
+  "scripts": {
+    "dev": "echo 'Development server command to be configured'",
+    "build": "echo 'Build command to be configured'",
+    "start": "echo 'Start command to be configured'",
+    "test": "echo 'Test command to be configured'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/Promax-digital-royal-website.git"
+  },
+  "keywords": [
+    "royal",
+    "website",
+    "digital",
+    "promax"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/Promax-digital-royal-website/issues"
+  },
+  "homepage": "https://github.com/yourusername/Promax-digital-royal-website#readme",
+  "dependencies": {},
+  "devDependencies": {}
+}
