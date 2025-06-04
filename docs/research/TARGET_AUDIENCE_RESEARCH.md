@@ -1,13 +1,20 @@
 # Royal RWA Target Audience Research
 
+## Note: Important Distinction
+**Asset Locations**: Kenya, Nigeria, Egypt, South Africa, Morocco, Ghana (where our real-world assets like fisheries, gold, and oil are located)
+
+**Investor Markets**: Global - UAE, Singapore, UK, US, Switzerland, etc. (where our investors are located)
+
+This document focuses on INVESTOR audiences, not asset locations.
+
 ## Primary Audience Segments
 
-### 1. Emerging Market Citizens (Africa Focus)
+### 1. Global DeFi Natives
 **Demographics:**
-- Age: 25-45 years
-- Location: Kenya, Nigeria, Egypt, South Africa, Morocco, Ghana
-- Income: Middle class ($5,000-$50,000 annual)
-- Tech Savvy: High mobile phone usage, familiar with mobile money
+- Age: 25-40 years
+- Location: US, Europe, Singapore, UAE, UK
+- Income: $75,000-$500,000 annual
+- Tech Savvy: Active in DeFi, comfortable with Web3
 
 **Pain Points:**
 - Currency devaluation (up to 30% annually)
