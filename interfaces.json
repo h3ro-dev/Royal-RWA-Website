@@ -1,0 +1,223 @@
+{
+  "_description": "Central communication hub for all engineers. Update your section when creating/modifying interfaces.",
+  "_lastUpdated": "2024-01-26T00:00:00Z",
+  
+  "engineer1": {
+    "components": {
+      "Button": {
+        "status": "planned",
+        "props": {
+          "variant": "primary | secondary | ghost",
+          "size": "sm | md | lg",
+          "disabled?": "boolean",
+          "loading?": "boolean",
+          "onClick?": "() => void"
+        },
+        "usage": "<Button variant='primary' size='md'>Click me</Button>"
+      },
+      "Card": {
+        "status": "planned",
+        "props": {
+          "glassMorphism?": "boolean",
+          "padding?": "sm | md | lg",
+          "hover?": "boolean"
+        }
+      },
+      "Input": {
+        "status": "planned",
+        "props": {
+          "type": "text | number | email",
+          "label": "string",
+          "error?": "string",
+          "floatingLabel?": "boolean"
+        }
+      },
+      "StatCard": {
+        "status": "planned",
+        "props": {
+          "label": "string",
+          "value": "string | number",
+          "change?": "string",
+          "icon?": "ReactNode"
+        }
+      }
+    },
+    "theme": {
+      "colors": {
+        "royal-midnight": "#1a1a4e",
+        "royal-deep-blue": "#2d2d7f",
+        "royal-gold": "#d4af37",
+        "royal-bright-gold": "#ffd700"
+      },
+      "breakpoints": {
+        "mobile": "375px",
+        "tablet": "768px",
+        "desktop": "1440px"
+      }
+    }
+  },
+  
+  "engineer2": {
+    "pages": {
+      "/": {
+        "status": "planned",
+        "components_needed": ["Button", "StatCard", "Card"],
+        "data_needed": ["tvl", "users", "currentAPY"]
+      },
+      "/calculator": {
+        "status": "planned",
+        "components_needed": ["Input", "Button", "Chart"],
+        "data_needed": ["yields", "projectionAPI"]
+      },
+      "/tokens": {
+        "status": "planned",
+        "components_needed": ["TokenCard", "Modal"],
+        "data_needed": ["tokenInfo"]
+      },
+      "/staking": {
+        "status": "planned",
+        "components_needed": ["Input", "Button", "ProgressBar"],
+        "data_needed": ["walletConnection", "stakingAPI"]
+      }
+    },
+    "features": {
+      "yieldCalculator": {
+        "input": {
+          "amount": "number",
+          "period": "flexible | 1year | 2year",
+          "compounding": "boolean"
+        },
+        "output": {
+          "total": "number",
+          "profit": "number",
+          "apy": "number",
+          "dailyEarnings": "number"
+        }
+      }
+    }
+  },
+  
+  "engineer3": {
+    "apis": {
+      "GET /api/stats/tvl": {
+        "status": "planned",
+        "response": {
+          "current": "number",
+          "change24h": "number",
+          "change7d": "number"
+        },
+        "mock_available": true
+      },
+      "GET /api/stats/users": {
+        "status": "planned",
+        "response": {
+          "total": "number",
+          "active": "number",
+          "new24h": "number"
+        },
+        "mock_available": true
+      },
+      "GET /api/yields/current": {
+        "status": "planned",
+        "response": {
+          "flexible": "number",
+          "oneYear": "number",
+          "twoYear": "number"
+        },
+        "mock_available": true
+      },
+      "POST /api/calculator/projection": {
+        "status": "planned",
+        "request": {
+          "amount": "number",
+          "period": "string",
+          "compounding": "boolean"
+        },
+        "response": {
+          "projectionData": "Array<{date: string, value: number}>"
+        }
+      }
+    },
+    "web3": {
+      "wagmiConfig": {
+        "status": "planned",
+        "chains": ["ethereum", "polygon", "arbitrum"],
+        "features": ["wallet_connect", "metamask", "coinbase"]
+      },
+      "contracts": {
+        "rwaToken": "0x... (pending deployment)",
+        "stakingContract": "0x... (pending deployment)",
+        "stablecoin": "0x... (pending deployment)"
+      }
+    },
+    "realtime": {
+      "websocket": {
+        "status": "planned",
+        "endpoint": "wss://api.royal-rwa.com/realtime",
+        "channels": ["prices", "activity", "tvl"]
+      }
+    }
+  },
+  
+  "engineer4": {
+    "testing": {
+      "unit": {
+        "status": "setup",
+        "framework": "vitest",
+        "coverage_target": "80%"
+      },
+      "e2e": {
+        "status": "setup",
+        "framework": "playwright",
+        "critical_paths": [
+          "homepage -> calculator -> results",
+          "connect -> stake -> success"
+        ]
+      }
+    },
+    "performance": {
+      "targets": {
+        "lighthouse": 95,
+        "fcp": "1.5s",
+        "lcp": "2.5s",
+        "cls": 0.1,
+        "bundle_size": "300KB"
+      },
+      "monitoring": {
+        "web_vitals": true,
+        "error_tracking": true,
+        "analytics": true
+      }
+    },
+    "animations": {
+      "hover": "scale(1.02) with spring",
+      "page_transition": "fade + slide",
+      "success": "confetti particles",
+      "loading": "skeleton screens"
+    }
+  },
+  
+  "shared": {
+    "types": {
+      "User": {
+        "id": "string",
+        "address": "string",
+        "stakingPositions": "StakingPosition[]"
+      },
+      "StakingPosition": {
+        "amount": "number",
+        "period": "flexible | 1year | 2year",
+        "startDate": "Date",
+        "rewards": "number"
+      },
+      "Asset": {
+        "id": "string",
+        "name": "string",
+        "location": "string",
+        "value": "number",
+        "apy": "number",
+        "type": "fisheries | gold | oil | real-estate"
+      }
+    }
+  }
+}
