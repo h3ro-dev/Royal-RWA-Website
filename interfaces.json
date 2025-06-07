@@ -77,9 +77,10 @@
         "data_needed": ["tokenInfo"]
       },
       "/staking": {
-        "status": "planned",
+        "status": "ready",
         "components_needed": ["Input", "Button", "ProgressBar"],
-        "data_needed": ["walletConnection", "stakingAPI"]
+        "data_needed": ["walletConnection", "stakingAPI"],
+        "_notes": "Complete multi-step staking flow with amount selection, period selection, confirmation, and success state"
       }
     },
     "features": {
