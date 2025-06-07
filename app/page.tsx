@@ -58,7 +58,7 @@ export default function Home() {
 
       {/* Features Overview */}
       <div className="max-w-7xl mx-auto mb-16">
-        <h2 className="text-4xl font-bold mb-8">What We're Building</h2>
+        <h2 className="text-4xl font-bold mb-8">What We&apos;re Building</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="glass rounded-lg p-6">
@@ -113,6 +113,16 @@ export default function Home() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Join the Future Section */}
+      <div className="max-w-7xl mx-auto mt-16">
+        <h2 className="text-4xl font-bold mb-8">Join the Future</h2>
+        <p className="text-xl text-gray-400 mb-12 max-w-2xl">
+          Join the future of investing. Access institutional-grade real estate
+          opportunities with the security of blockchain technology and
+          Royal&apos;s trusted platform.
+        </p>
       </div>
     </main>
   )

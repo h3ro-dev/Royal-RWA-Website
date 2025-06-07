@@ -55,7 +55,14 @@ export async function GET(request: Request) {
           ...portfolio,
           totalValue: portfolio.totalValue.toString(),
         },
-      } as APIResponse<any>)
+      } as APIResponse<{
+        totalValue: string;
+        totalAssets: number;
+        averageYield: number;
+        collateralizationRatio: number;
+        assetsByType: Record<string, RWAAsset[]>;
+        assetsByCountry: Record<string, RWAAsset[]>;
+      }>)
     }
     
     if (action === 'list' || !action) {
@@ -80,7 +87,19 @@ export async function GET(request: Request) {
       const end = start + limit
       const paginatedAssets = assets.slice(start, end)
       
-      const response: PaginatedResponse<any> = {
+      const response: PaginatedResponse<{
+        id: string;
+        name: string;
+        type: string;
+        location: string;
+        country: string;
+        value: string;
+        yield: number;
+        active: boolean;
+        description: string;
+        images: string[];
+        documents: string[];
+      }> = {
         success: true,
         data: paginatedAssets.map(asset => ({
           ...asset,
@@ -112,7 +131,19 @@ export async function GET(request: Request) {
           ...asset,
           value: asset.value.toString(),
         },
-      } as APIResponse<any>)
+      } as APIResponse<{
+        id: string;
+        name: string;
+        type: string;
+        location: string;
+        country: string;
+        value: string;
+        yield: number;
+        active: boolean;
+        description: string;
+        images: string[];
+        documents: string[];
+      }>)
     }
     
     return NextResponse.json({

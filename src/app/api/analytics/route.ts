@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getRWAAssets, getTotalAssetsValue } from '../../../services/blockchain'
-import { CONTRACTS } from '../../../config/contracts'
+import { getTotalAssetsValue } from '../../../services/blockchain'
 import type { APIResponse, Analytics, ActivityItem } from '../../../types/engineer3'
 
 // Mock data for demonstration - in production, this would come from a database or indexer
@@ -106,7 +105,14 @@ export async function GET(request: Request) {
             value: perf.value.toString(),
           })),
         },
-      } as APIResponse<any>)
+      } as APIResponse<{
+        totalValueLocked: string;
+        totalUsers: number;
+        totalTransactions: number;
+        averageStakeSize: string;
+        topStakers: Array<{ address: string; amount: string }>;
+        assetPerformance: Array<{ assetId: string; yield: number; value: string }>;
+      }>)
     }
     
     if (type === 'activity') {
@@ -125,7 +131,7 @@ export async function GET(request: Request) {
       return NextResponse.json({
         success: true,
         data: activities,
-      } as APIResponse<any[]>)
+      } as APIResponse<typeof activities>)
     }
     
     if (type === 'performance') {
@@ -157,7 +163,7 @@ export async function GET(request: Request) {
       return NextResponse.json({
         success: true,
         data: performanceData,
-      } as APIResponse<any>)
+      } as APIResponse<typeof performanceData>)
     }
     
     return NextResponse.json({

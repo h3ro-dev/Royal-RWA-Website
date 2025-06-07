@@ -31,8 +31,8 @@ export class ErrorBoundary extends Component<Props, State> {
     // Track error in analytics
     analytics.track('error_boundary_triggered', {
       error_message: error.message,
-      error_stack: error.stack,
-      component_stack: errorInfo.componentStack,
+      error_stack: error.stack || '',
+      component_stack: errorInfo.componentStack || '',
       error_name: error.name,
     });
 
@@ -88,8 +88,8 @@ export class ErrorBoundary extends Component<Props, State> {
               Oops! Something went wrong
             </h2>
             
-            <p className="text-white/80 mb-6">
-              We're sorry for the inconvenience. The error has been logged and our team will look into it.
+            <p className="text-gray-300 mb-8">
+              We&apos;ve encountered an unexpected error. Don&apos;t worry, your funds are safe.
             </p>
 
             {process.env.NODE_ENV === 'development' && this.state.error && (
@@ -130,13 +130,19 @@ export class ErrorBoundary extends Component<Props, State> {
 
 // Hook for using error boundary in functional components
 export function useErrorHandler() {
-  return (error: Error) => {
+  const handleError = (error: Error) => {
+    console.error('Error caught by error handler:', error);
+    
+    // Track error
     analytics.track('error_handler_used', {
       error_message: error.message,
-      error_stack: error.stack,
+      error_stack: error.stack || '',
       error_name: error.name,
     });
     
-    throw error; // This will be caught by the nearest ErrorBoundary
+    // You can add custom error handling logic here
+    // For example, show a toast notification
   };
+
+  return handleError;
 }

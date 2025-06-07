@@ -84,7 +84,13 @@ export interface Transaction {
   timestamp: number
   status: 'pending' | 'success' | 'failed'
   type: 'stake' | 'unstake' | 'claim' | 'transfer' | 'swap'
-  metadata?: any
+  metadata?: {
+    stakeId?: string
+    lockPeriod?: number
+    apy?: number
+    tokenAddress?: string
+    assetId?: string
+  }
 }
 
 // API response types
