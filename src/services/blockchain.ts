@@ -1,7 +1,6 @@
 import { 
   getContract, 
   parseEther, 
-  formatEther, 
   parseUnits, 
   formatUnits 
 } from 'viem'
@@ -9,7 +8,6 @@ import { getPublicClient, getWalletClient } from 'wagmi/actions'
 import { CONTRACTS, ABIS } from '../config/contracts'
 import type { 
   TokenInfo, 
-  TokenBalance, 
   StakePosition, 
   RWAAsset,
   Transaction
@@ -185,15 +183,16 @@ export async function getUserStakes(
 }
 
 // RWA Asset functions
-export async function getRWAAssets(chainId: number): Promise<RWAAsset[]> {
-  const publicClient = getPublicClient({ chainId })
-  const { address } = getContractInstance('RWA_ASSETS', chainId)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function getRWAAssets(_chainId: number): Promise<RWAAsset[]> {
+  // const publicClient = getPublicClient({ chainId })
+  // const { address } = getContractInstance('RWA_ASSETS', chainId)
   
-  const contract = getContract({
-    address: address as `0x${string}`,
-    abi: ABIS.RWA_ASSETS,
-    publicClient,
-  })
+  // const contract = getContract({
+  //   address: address as `0x${string}`,
+  //   abi: ABIS.RWA_ASSETS,
+  //   publicClient,
+  // })
   
   // This is a simplified example - in reality, you'd need to know asset IDs
   // or have a function that returns all asset IDs

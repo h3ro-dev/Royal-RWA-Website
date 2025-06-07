@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getTokenInfo, getTokenBalance } from '../../../services/blockchain'
 import { CONTRACTS } from '../../../config/contracts'
-import type { APIResponse, TokenInfo } from '../../../types/engineer3'
+import type { APIResponse } from '../../../types/engineer3'
 
 // GET /api/tokens - Get token information
 export async function GET(request: Request) {
@@ -37,10 +37,20 @@ export async function GET(request: Request) {
       balance = await getTokenBalance(tokenAddress, userAddress, chainId)
     }
     
-    const response: APIResponse<any> = {
+    const response: APIResponse<{
+      name: string;
+      symbol: string;
+      decimals: number;
+      totalSupply: string;
+      balance?: string;
+      formattedBalance?: string;
+      address: string;
+      chainId: number;
+    }> = {
       success: true,
       data: {
         ...tokenInfo,
+        totalSupply: tokenInfo.totalSupply.toString(),
         balance: balance?.toString(),
         formattedBalance: balance ? formatBalance(balance, tokenInfo.decimals) : undefined,
       },

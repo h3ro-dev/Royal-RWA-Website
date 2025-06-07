@@ -43,7 +43,14 @@ export async function GET(request: Request) {
           ...mockMarketData[token],
           circulatingSupply: mockMarketData[token].circulatingSupply.toString(),
         },
-      } as APIResponse<any>)
+      } as APIResponse<{
+        price: number;
+        priceChange24h: number;
+        volume24h: number;
+        marketCap: number;
+        circulatingSupply: string;
+        timestamp: number;
+      }>)
     }
     
     if (!token) {
@@ -57,7 +64,15 @@ export async function GET(request: Request) {
       return NextResponse.json({
         success: true,
         data: allMarketData,
-      } as APIResponse<any[]>)
+      } as APIResponse<Array<{
+        token: string;
+        price: number;
+        priceChange24h: number;
+        volume24h: number;
+        marketCap: number;
+        circulatingSupply: string;
+        timestamp: number;
+      }>>)
     }
     
     // Historical price data
@@ -112,7 +127,15 @@ export async function GET(request: Request) {
           period,
           data: historicalData,
         },
-      } as APIResponse<any>)
+      } as APIResponse<{
+        token: string;
+        period: string;
+        data: Array<{
+          timestamp: number;
+          price: number;
+          volume: number;
+        }>;
+      }>)
     }
     
     return NextResponse.json({

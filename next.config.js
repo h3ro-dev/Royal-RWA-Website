@@ -1,12 +1,34 @@
 /** @type {import('next').NextConfig} */
-<<<<<<< HEAD
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   images: {
-    domains: ['royalrwa.com', 'localhost'],
+    domains: ['localhost'],
   },
-=======
+  experimental: {
+    appDir: true,
+  },
+}
+
+module.exports = nextConfig
+  swcMinify: true,
+  
+  // Image optimization
+  images: {
+    domains: ['localhost', 'royal-rwa.com'],
+    formats: ['image/avif', 'image/webp'],
+  },
+  
+  // Compiler options
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  
+  // Experimental features
+  experimental: {
+    optimizeCss: true,
+  },
+  
+  // Headers for security
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
@@ -54,27 +76,48 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   
->>>>>>> origin/main
   env: {
     NEXT_PUBLIC_APP_NAME: 'Royal RWA',
     NEXT_PUBLIC_APP_DESCRIPTION: 'Where Sovereign Wealth Meets Individual Opportunity',
   },
-<<<<<<< HEAD
-  webpack: (config) => {
-    // Required for wagmi/viem
-    config.resolve.fallback = { fs: false, net: false, tls: false }
-    config.externals.push('pino-pretty', 'lokijs', 'encoding')
-    return config
-  },
-}
-
-module.exports = nextConfig
-=======
   
   async headers() {
     return [
       {
         source: '/:path*',
+        headers: [
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on'
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN'
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin'
+          },
+        ],
+      },
+    ]
+  },
+  
+  // Webpack configuration
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': './src',
+    }
+    return config
+  },
+}
+
+module.exports = nextConfig
         headers: securityHeaders,
       },
     ];
@@ -119,4 +162,3 @@ module.exports = nextConfig
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
->>>>>>> origin/main

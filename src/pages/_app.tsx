@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { reportWebVitals, analytics } from '@/lib/analytics';
 import '@/styles/globals.css';
+import { useRouter } from 'next/router';
 
 // Font optimization
 const inter = Inter({
@@ -14,6 +15,8 @@ const inter = Inter({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter()
+
   useEffect(() => {
     // Initialize analytics on mount
     analytics.initialize();
@@ -27,15 +30,18 @@ export default function App({ Component, pageProps }: AppProps) {
     };
 
     // Listen to route changes
+    router.events.on('routeChangeComplete', handleRouteChange);
+    
+    // Initial page view
     if (typeof window !== 'undefined') {
-      // Initial page view
       analytics.track('page_view', { url: window.location.pathname });
     }
 
     return () => {
-      // Cleanup if needed
+      // Cleanup
+      router.events.off('routeChangeComplete', handleRouteChange);
     };
-  }, []);
+  }, [router.events]);
 
   return (
     <ErrorBoundary>

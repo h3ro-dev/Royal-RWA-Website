@@ -3,11 +3,9 @@ import { useAccount, useNetwork } from 'wagmi'
 import type { 
   TokenInfo, 
   StakePosition, 
-  RWAAsset, 
   MarketData,
-  Analytics,
-  ActivityItem,
   YieldData,
+  ActivityItem,
   APIResponse
 } from '../types/engineer3'
 
@@ -173,31 +171,6 @@ export function useMarketData(token?: string) {
       return data.data
     },
     refetchInterval: 60000, // Refresh every minute
-  })
-}
-
-// Analytics hook
-export function useAnalytics(type: 'overview' | 'activity' | 'performance' = 'overview') {
-  const { chain } = useNetwork()
-  
-  return useQuery({
-    queryKey: ['analytics', type, chain?.id],
-    queryFn: async () => {
-      const params = new URLSearchParams({
-        type,
-        chainId: chain?.id?.toString() || '1',
-      })
-      
-      const response = await fetch(`${API_BASE_URL}/analytics?${params}`)
-      const data = await response.json()
-      
-      if (!data.success) {
-        throw new Error(data.error || 'Failed to fetch analytics')
-      }
-      
-      return data.data
-    },
-    staleTime: type === 'activity' ? 30000 : 5 * 60 * 1000, // Activity: 30s, others: 5 min
   })
 }
 
