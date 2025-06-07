@@ -52,6 +52,10 @@
 }
     ],
     "paths": {
+<<<<<<< HEAD
+      "@/*": ["./src/*"]
+    }
+=======
       "@/*": ["./src/*"],
       "@/components/*": ["./src/components/*"],
       "@/lib/*": ["./src/lib/*"],
@@ -76,6 +80,7 @@
       "@/types/*": ["./src/types/*"]
     },
     "baseUrl": "."
+>>>>>>> origin/main
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

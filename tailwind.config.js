@@ -106,6 +106,8 @@ module.exports = {
     },
   },
   plugins: [],
+<<<<<<< HEAD
+=======
   darkMode: 'class',
   theme: {
     extend: {
@@ -190,4 +192,5 @@ module.exports = {
   future: {
     hoverOnlyWhenSupported: true,
   },
+>>>>>>> origin/main
 }
