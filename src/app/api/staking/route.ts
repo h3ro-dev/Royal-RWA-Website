@@ -52,7 +52,13 @@ export async function GET(request: Request) {
           maximumStake: option.maximumStake?.toString(),
           availableCapacity: option.availableCapacity.toString(),
         })),
-      } as APIResponse<any[]>)
+      } as APIResponse<Array<{
+        lockPeriod: number;
+        apy: number;
+        minimumStake: string;
+        maximumStake?: string;
+        availableCapacity: string;
+      }>>)
     }
     
     return NextResponse.json({

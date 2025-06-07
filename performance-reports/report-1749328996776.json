@@ -1,0 +1,30 @@
+{
+  "timestamp": "2025-06-07T20:43:16.776Z",
+  "bundle": null,
+  "lighthouse": {
+    "performance": 96,
+    "accessibility": 98,
+    "bestPractices": 95,
+    "seo": 92
+  },
+  "budgets": {
+    "lighthouse": {
+      "performance": 95,
+      "accessibility": 95,
+      "bestPractices": 95,
+      "seo": 90
+    },
+    "bundle": {
+      "javascript": 307200,
+      "css": 102400,
+      "total": 1024000
+    },
+    "webVitals": {
+      "FCP": 1500,
+      "LCP": 2500,
+      "CLS": 0.1,
+      "FID": 100,
+      "TTFB": 800
+    }
+  }
+}

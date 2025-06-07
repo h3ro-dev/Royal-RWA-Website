@@ -27,8 +27,14 @@ export const PERFORMANCE_BUDGETS = {
 };
 
 // Analytics instance (placeholder - would be replaced with real analytics service)
+interface AnalyticsEvent {
+  type: 'track';
+  event: string;
+  properties: Record<string, string | number | boolean>;
+}
+
 class Analytics {
-  private queue: any[] = [];
+  private queue: AnalyticsEvent[] = [];
   private initialized = false;
 
   initialize() {
@@ -42,8 +48,8 @@ class Analytics {
     this.queue = [];
   }
 
-  track(eventName: string, properties?: Record<string, any>) {
-    const event = {
+  track(eventName: string, properties?: Record<string, string | number | boolean>) {
+    const event: AnalyticsEvent = {
       type: 'track',
       event: eventName,
       properties: {
@@ -80,7 +86,7 @@ class Analytics {
     }
   }
 
-  private send(event: any) {
+  private send(event: AnalyticsEvent) {
     // Send to analytics service
     if (process.env.NODE_ENV === 'development') {
       console.log('[Analytics]', event);
