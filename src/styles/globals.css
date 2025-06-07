@@ -12,6 +12,21 @@
     --royal-deep-blue: 45 45 127;
     --royal-gold: 212 175 55;
     --royal-bright-gold: 255 215 0;
+    --royal-dark: 10 10 31;
+    --royal-light: 248 248 255;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-royal-dark text-royal-light;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
     --royal-light-blue: 74 74 171;
     --royal-dark-blue: 15 15 58;
     
@@ -95,6 +110,58 @@
 }
 
 @layer components {
+  .glass-card {
+    @apply backdrop-blur-md bg-white/5 border border-white/10 rounded-2xl;
+  }
+
+  .gold-gradient {
+    @apply bg-gradient-to-r from-royal-gold to-royal-bright-gold;
+  }
+
+  .gold-gradient-text {
+    @apply bg-gradient-to-r from-royal-gold to-royal-bright-gold bg-clip-text text-transparent;
+  }
+
+  .royal-gradient {
+    @apply bg-gradient-to-br from-royal-midnight to-royal-deep-blue;
+  }
+
+  .glow-gold {
+    @apply shadow-[0_0_30px_rgba(212,175,55,0.5)];
+  }
+
+  .trust-badge {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-full bg-royal-gold/10 text-royal-gold text-sm font-medium;
+  }
+
+  .primary-button {
+    @apply px-8 py-4 rounded-xl font-semibold transition-all duration-300 
+           bg-gradient-to-r from-royal-gold to-royal-bright-gold text-royal-midnight
+           hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] hover:scale-105
+           active:scale-95;
+  }
+
+  .secondary-button {
+    @apply px-8 py-4 rounded-xl font-semibold transition-all duration-300
+           border border-royal-gold/30 text-royal-gold
+           hover:bg-royal-gold/10 hover:border-royal-gold
+           active:scale-95;
+  }
+}
+
+@layer utilities {
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
   /* Glass morphism effect */
   .glass {
     @apply backdrop-blur-md bg-white/5 border border-white/10 shadow-glass;
