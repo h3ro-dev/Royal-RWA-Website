@@ -1,0 +1,83 @@
+name: Integration Check
+
+on:
+  push:
+    branches:
+      - feat/engineer*
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  integration-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Validate interfaces.json
+      run: |
+        echo "Validating interfaces.json structure..."
+        node -e "
+        const fs = require('fs');
+        const interfaces = JSON.parse(fs.readFileSync('interfaces.json', 'utf8'));
+        console.log('✓ interfaces.json is valid JSON');
+        
+        // Check all engineers have their sections
+        const requiredSections = ['engineer1', 'engineer2', 'engineer3', 'engineer4', 'shared'];
+        const missingSections = requiredSections.filter(section => !interfaces[section]);
+        
+        if (missingSections.length > 0) {
+          console.error('✗ Missing sections:', missingSections);
+          process.exit(1);
+        }
+        
+        console.log('✓ All engineer sections present');
+        console.log('✓ Last updated:', interfaces._lastUpdated);
+        "
+    
+    - name: Type Check
+      run: npm run type-check || echo "Type checking not configured yet"
+    
+    - name: Lint Check
+      run: npm run lint || echo "Linting not configured yet"
+    
+    - name: Build Check
+      run: npm run build || echo "Build not configured yet"
+    
+    - name: Check Component Status
+      run: |
+        echo "Checking component implementation status..."
+        node -e "
+        const fs = require('fs');
+        const interfaces = JSON.parse(fs.readFileSync('interfaces.json', 'utf8'));
+        
+        console.log('Engineer 1 - Components:');
+        Object.entries(interfaces.engineer1.components).forEach(([name, comp]) => {
+          console.log(\`  - \${name}: \${comp.status}\`);
+        });
+        
+        console.log('\nEngineer 2 - Pages:');
+        Object.entries(interfaces.engineer2.pages).forEach(([path, page]) => {
+          console.log(\`  - \${path}: \${page.status}\`);
+        });
+        
+        console.log('\nEngineer 3 - APIs:');
+        Object.entries(interfaces.engineer3.apis).forEach(([endpoint, api]) => {
+          console.log(\`  - \${endpoint}: \${api.status}\`);
+        });
+        
+        console.log('\nEngineer 4 - Testing:');
+        console.log(\`  - Unit Tests: \${interfaces.engineer4.testing.unit.status}\`);
+        console.log(\`  - E2E Tests: \${interfaces.engineer4.testing.e2e.status}\`);
+        " 

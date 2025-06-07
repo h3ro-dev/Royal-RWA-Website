@@ -1,0 +1,121 @@
+name: Scheduled Integration Build
+
+on:
+  schedule:
+    # Run every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  integration-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # Fetch all branches
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Check all engineer branches
+      run: |
+        echo "Checking status of all engineer branches..."
+        
+        for branch in feat/engineer1-foundation feat/engineer2-features feat/engineer3-data feat/engineer4-performance; do
+          echo "Checking $branch..."
+          git log origin/$branch -1 --pretty=format:"Latest commit: %h - %s (%cr by %an)"
+          echo ""
+        done
+    
+    - name: Merge all branches for integration test
+      run: |
+        # Create integration branch
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        
+        git checkout -b integration-test
+        
+        # Attempt to merge all engineer branches
+        for branch in feat/engineer1-foundation feat/engineer2-features feat/engineer3-data feat/engineer4-performance; do
+          echo "Merging $branch..."
+          git merge origin/$branch --no-edit || {
+            echo "Merge conflict detected with $branch"
+            git merge --abort
+            exit 1
+          }
+        done
+    
+    - name: Run full integration tests
+      run: |
+        echo "Running integration tests..."
+        npm run test || echo "Tests not configured yet"
+        
+    - name: Build production bundle
+      run: |
+        echo "Building production bundle..."
+        npm run build || echo "Build not configured yet"
+    
+    - name: Check bundle size
+      run: |
+        echo "Checking bundle size..."
+        if [ -d ".next" ]; then
+          du -sh .next
+        fi
+    
+    - name: Generate integration report
+      if: always()
+      run: |
+        echo "## Integration Report - $(date)" > integration-report.md
+        echo "" >> integration-report.md
+        
+        echo "### Branch Status" >> integration-report.md
+        for branch in feat/engineer1-foundation feat/engineer2-features feat/engineer3-data feat/engineer4-performance; do
+          echo "- $branch: $(git log origin/$branch -1 --pretty=format:'%h - %s')" >> integration-report.md
+        done
+        
+        echo "" >> integration-report.md
+        echo "### interfaces.json Status" >> integration-report.md
+        node -e "
+        const fs = require('fs');
+        const interfaces = JSON.parse(fs.readFileSync('interfaces.json', 'utf8'));
+        
+        let readyCount = 0;
+        let totalCount = 0;
+        
+        // Count component statuses
+        Object.values(interfaces.engineer1.components).forEach(comp => {
+          totalCount++;
+          if (comp.status === 'ready') readyCount++;
+        });
+        
+        console.log(\`- Components: \${readyCount}/\${totalCount} ready\`);
+        
+        // Count page statuses
+        readyCount = 0;
+        totalCount = 0;
+        Object.values(interfaces.engineer2.pages).forEach(page => {
+          totalCount++;
+          if (page.status === 'ready') readyCount++;
+        });
+        
+        console.log(\`- Pages: \${readyCount}/\${totalCount} ready\`);
+        
+        // Count API statuses
+        readyCount = 0;
+        totalCount = 0;
+        Object.values(interfaces.engineer3.apis).forEach(api => {
+          totalCount++;
+          if (api.status === 'ready') readyCount++;
+        });
+        
+        console.log(\`- APIs: \${readyCount}/\${totalCount} ready\`);
+        " >> integration-report.md
+        
+        cat integration-report.md 

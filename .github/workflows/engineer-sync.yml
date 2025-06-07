@@ -1,0 +1,134 @@
+name: Engineer Sync
+
+on:
+  schedule:
+    # Run every 12 hours for cross-engineer sync
+    - cron: '0 0,12 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync-engineers:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    - name: Check interfaces.json synchronization
+      run: |
+        echo "Checking interfaces.json for cross-engineer dependencies..."
+        
+        node -e "
+        const fs = require('fs');
+        const interfaces = JSON.parse(fs.readFileSync('interfaces.json', 'utf8'));
+        
+        console.log('=== Cross-Engineer Dependency Check ===\n');
+        
+        // Check Engineer 2's component needs vs Engineer 1's status
+        console.log('Engineer 2 → Engineer 1 Dependencies:');
+        Object.entries(interfaces.engineer2.pages).forEach(([page, config]) => {
+          const needed = config.components_needed || [];
+          needed.forEach(comp => {
+            const status = interfaces.engineer1.components[comp]?.status || 'not found';
+            const emoji = status === 'ready' ? '✅' : status === 'in-progress' ? '🚧' : '❌';
+            console.log(\`  \${page} needs \${comp}: \${emoji} \${status}\`);
+          });
+        });
+        
+        console.log('\nEngineer 2 → Engineer 3 Dependencies:');
+        Object.entries(interfaces.engineer2.pages).forEach(([page, config]) => {
+          const needed = config.data_needed || [];
+          needed.forEach(data => {
+            // Try to find matching API
+            let found = false;
+            Object.keys(interfaces.engineer3.apis).forEach(api => {
+              if (api.toLowerCase().includes(data.toLowerCase())) {
+                const status = interfaces.engineer3.apis[api].status;
+                const emoji = status === 'ready' ? '✅' : status === 'in-progress' ? '🚧' : '❌';
+                console.log(\`  \${page} needs \${data}: \${emoji} \${status} (via \${api})\`);
+                found = true;
+              }
+            });
+            if (!found) {
+              console.log(\`  \${page} needs \${data}: ❌ no matching API found\`);
+            }
+          });
+        });
+        
+        // Check last update time
+        const lastUpdate = new Date(interfaces._lastUpdated);
+        const hoursSinceUpdate = (Date.now() - lastUpdate) / (1000 * 60 * 60);
+        
+        console.log(\`\nLast interfaces.json update: \${hoursSinceUpdate.toFixed(1)} hours ago\`);
+        
+        if (hoursSinceUpdate > 12) {
+          console.warn('⚠️  WARNING: interfaces.json hasn\'t been updated in over 12 hours!');
+        }
+        "
+    
+    - name: Generate sync report
+      run: |
+        echo "# Engineer Sync Report - $(date)" > sync-report.md
+        echo "" >> sync-report.md
+        
+        # Get commit activity for each engineer branch
+        echo "## Commit Activity (Last 24 hours)" >> sync-report.md
+        
+        for branch in feat/engineer1-foundation feat/engineer2-features feat/engineer3-data feat/engineer4-performance; do
+          echo "" >> sync-report.md
+          echo "### $branch" >> sync-report.md
+          
+          # Count commits in last 24 hours
+          commit_count=$(git rev-list --count --since="24 hours ago" origin/$branch)
+          echo "Commits in last 24h: $commit_count" >> sync-report.md
+          
+          # Show recent commits
+          echo "Recent commits:" >> sync-report.md
+          git log origin/$branch --since="24 hours ago" --pretty=format:"- %h - %s (%cr)" >> sync-report.md || echo "No commits in last 24 hours" >> sync-report.md
+          echo "" >> sync-report.md
+        done
+        
+        echo "" >> sync-report.md
+        echo "## Action Items" >> sync-report.md
+        
+        # Check for stale branches
+        for branch in feat/engineer1-foundation feat/engineer2-features feat/engineer3-data feat/engineer4-performance; do
+          last_commit=$(git log origin/$branch -1 --pretty=format:"%cr")
+          hours_ago=$(git log origin/$branch -1 --pretty=format:"%ct")
+          current_time=$(date +%s)
+          hours_diff=$(( ($current_time - $hours_ago) / 3600 ))
+          
+          if [ $hours_diff -gt 48 ]; then
+            echo "- ⚠️  $branch is stale (last commit: $last_commit)" >> sync-report.md
+          fi
+        done
+        
+        cat sync-report.md
+    
+    - name: Create sync issue if needed
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const report = fs.readFileSync('sync-report.md', 'utf8');
+          
+          // Check if there are any warnings in the report
+          if (report.includes('⚠️')) {
+            // Create an issue
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Engineer Sync Alert - ${new Date().toISOString().split('T')[0]}`,
+              body: report,
+              labels: ['sync-alert', 'automated']
+            });
+            
+            console.log(`Created issue #${issue.data.number}`);
+          } 

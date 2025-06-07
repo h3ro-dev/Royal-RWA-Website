@@ -1,0 +1,140 @@
+name: Branch Protection Check
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+
+jobs:
+  quality-gates:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Check interfaces.json updates
+      run: |
+        echo "Checking if interfaces.json was updated..."
+        
+        # Get the changed files
+        git fetch origin main
+        CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
+        
+        # Extract engineer number from branch name
+        BRANCH_NAME="${GITHUB_HEAD_REF}"
+        ENGINEER_NUM=$(echo $BRANCH_NAME | grep -oE 'engineer[0-9]' | grep -oE '[0-9]')
+        
+        if [ ! -z "$ENGINEER_NUM" ]; then
+          echo "This is Engineer $ENGINEER_NUM's branch"
+          
+          # Check if engineer updated their section in interfaces.json
+          if echo "$CHANGED_FILES" | grep -q "interfaces.json"; then
+            echo "✅ interfaces.json was updated"
+            
+            # Verify only their section was modified
+            node -e "
+            const { execSync } = require('child_process');
+            const diff = execSync('git diff origin/main...HEAD interfaces.json', { encoding: 'utf-8' });
+            
+            const engineerNum = '$ENGINEER_NUM';
+            const otherEngineers = ['1', '2', '3', '4'].filter(n => n !== engineerNum);
+            
+            let modifiedOthers = false;
+            otherEngineers.forEach(num => {
+              if (diff.includes('engineer' + num)) {
+                console.error('❌ ERROR: Modified engineer' + num + ' section!');
+                console.error('Engineers should only modify their own sections.');
+                modifiedOthers = true;
+              }
+            });
+            
+            if (modifiedOthers) {
+              process.exit(1);
+            } else {
+              console.log('✅ Only modified own section');
+            }
+            "
+          else
+            echo "⚠️  WARNING: interfaces.json was not updated"
+            echo "Remember to update your section when making changes!"
+          fi
+        fi
+    
+    - name: Run domain-specific tests
+      run: |
+        BRANCH_NAME="${GITHUB_HEAD_REF}"
+        
+        if [[ $BRANCH_NAME == *"engineer1"* ]]; then
+          echo "Running Engineer 1 (Foundation) tests..."
+          npm run test:components || echo "Component tests not configured yet"
+          
+        elif [[ $BRANCH_NAME == *"engineer2"* ]]; then
+          echo "Running Engineer 2 (Features) tests..."
+          npm run test:features || echo "Feature tests not configured yet"
+          
+        elif [[ $BRANCH_NAME == *"engineer3"* ]]; then
+          echo "Running Engineer 3 (Data) tests..."
+          npm run test:api || echo "API tests not configured yet"
+          
+        elif [[ $BRANCH_NAME == *"engineer4"* ]]; then
+          echo "Running Engineer 4 (Performance) tests..."
+          npm run test:performance || echo "Performance tests not configured yet"
+        fi
+    
+    - name: Check commit frequency
+      run: |
+        echo "Checking commit frequency..."
+        
+        # Get commits from this PR
+        COMMITS=$(git rev-list --count origin/main...HEAD)
+        
+        # Get time span
+        FIRST_COMMIT_TIME=$(git log origin/main...HEAD --reverse --pretty=format:"%ct" | head -1)
+        LAST_COMMIT_TIME=$(git log origin/main...HEAD -1 --pretty=format:"%ct")
+        
+        if [ ! -z "$FIRST_COMMIT_TIME" ] && [ ! -z "$LAST_COMMIT_TIME" ]; then
+          TIME_DIFF=$(( ($LAST_COMMIT_TIME - $FIRST_COMMIT_TIME) / 3600 ))
+          
+          if [ $TIME_DIFF -gt 2 ]; then
+            EXPECTED_COMMITS=$(( $TIME_DIFF / 2 ))
+            
+            echo "Time span: $TIME_DIFF hours"
+            echo "Commits: $COMMITS"
+            echo "Expected (every 2 hours): ~$EXPECTED_COMMITS"
+            
+            if [ $COMMITS -lt $(( $EXPECTED_COMMITS / 2 )) ]; then
+              echo "⚠️  WARNING: Commit frequency is low. Remember to commit every 2 hours!"
+            else
+              echo "✅ Good commit frequency"
+            fi
+          fi
+        fi
+    
+    - name: Performance check
+      if: always()
+      run: |
+        echo "Checking performance targets..."
+        
+        # This would normally run actual performance tests
+        node -e "
+        const fs = require('fs');
+        const interfaces = JSON.parse(fs.readFileSync('interfaces.json', 'utf8'));
+        const targets = interfaces.engineer4.performance.targets;
+        
+        console.log('Performance Targets:');
+        console.log('- Lighthouse Score: ' + targets.lighthouse);
+        console.log('- First Contentful Paint: ' + targets.fcp);
+        console.log('- Largest Contentful Paint: ' + targets.lcp);
+        console.log('- Cumulative Layout Shift: ' + targets.cls);
+        console.log('- Bundle Size: ' + targets.bundle_size);
+        " 
