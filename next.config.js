@@ -1,25 +1,4 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
-  images: {
-    domains: ['royalrwa.com', 'localhost'],
-  },
-  env: {
-    NEXT_PUBLIC_APP_NAME: 'Royal RWA',
-    NEXT_PUBLIC_APP_DESCRIPTION: 'Where Sovereign Wealth Meets Individual Opportunity',
-  },
-  webpack: (config) => {
-    // Required for wagmi/viem
-    config.resolve.fallback = { fs: false, net: false, tls: false }
-    config.externals.push('pino-pretty', 'lokijs', 'encoding')
-    return config
-  },
-}
-
-module.exports = nextConfig
-
-
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
@@ -61,10 +40,15 @@ const nextConfig = {
   poweredByHeader: false,
   
   images: {
-    domains: ['royal-rwa.com'],
+    domains: ['royalrwa.com', 'royal-rwa.com', 'localhost'],
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+  },
+  
+  env: {
+    NEXT_PUBLIC_APP_NAME: 'Royal RWA',
+    NEXT_PUBLIC_APP_DESCRIPTION: 'Where Sovereign Wealth Meets Individual Opportunity',
   },
   
   async headers() {
@@ -81,6 +65,10 @@ const nextConfig = {
   },
   
   webpack: (config, { isServer, dev }) => {
+    // Required for wagmi/viem
+    config.resolve.fallback = { fs: false, net: false, tls: false }
+    config.externals.push('pino-pretty', 'lokijs', 'encoding')
+    
     // Performance optimizations
     if (!dev) {
       config.optimization.splitChunks = {
@@ -109,7 +97,5 @@ const nextConfig = {
     return config;
   },
 };
-
-module.exports = withBundleAnalyzer(nextConfig);
 
 module.exports = withBundleAnalyzer(nextConfig);
