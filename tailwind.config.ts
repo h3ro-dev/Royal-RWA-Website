@@ -19,6 +19,8 @@ const config: Config = {
           'bright-gold': tokens.colors.royal.brightGold,
           'light-blue': tokens.colors.royal.lightBlue,
           'dark-blue': tokens.colors.royal.darkBlue,
+          purple: '#4c1d95',
+          white: '#ffffff',
         },
         
         // Background colors using CSS variables

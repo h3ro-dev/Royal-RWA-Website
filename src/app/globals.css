@@ -128,6 +128,35 @@ a {
   50% { transform: translateY(-10px); }
 }
 
+/* Glass Card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Primary Button */
+.primary-button {
+  background: linear-gradient(135deg, var(--royal-gold) 0%, var(--royal-bright-gold) 100%);
+  color: var(--royal-midnight);
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.primary-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+}
+
+/* Royal Light Color */
+.text-royal-light {
+  color: #e0e0f0;
+}
+
 /* Responsive Typography */
 @media (max-width: 768px) {
   :root {
