@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { Inter } from 'next/font/google';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { reportWebVitals, analytics } from '@/lib/analytics';
-import '@/styles/globals.css';
+import '@/app/globals.css';
 import { useRouter } from 'next/router';
 
 // Font optimization
