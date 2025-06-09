@@ -20,10 +20,6 @@
       }
     ],
     "paths": {
-<<<<<<< HEAD
-      "@/*": ["./src/*"]
-    }
-=======
       "@/*": ["./src/*"],
       "@/components": ["./src/components"],
       "@/components/*": ["./src/components/*"],
@@ -35,7 +31,6 @@
       "@/constants/*": ["./src/constants/*"]
     },
     "baseUrl": "."
->>>>>>> origin/main
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
