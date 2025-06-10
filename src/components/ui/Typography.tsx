@@ -4,6 +4,7 @@ import React from 'react'
 import { motion, type HTMLMotionProps } from 'framer-motion'
 import { cn } from '../../utils/cn'
 import { responsiveText, gradientText } from '../../utils/style-helpers'
+import { cva, type VariantProps } from 'class-variance-authority'
 
 // Base Typography Props
 interface BaseTypographyProps {
@@ -346,3 +347,45 @@ export const List: React.FC<ListProps> = ({
     </Component>
   )
 }
+
+const typographyVariants = cva(
+  'text-white',
+  {
+    variants: {
+      variant: {
+        h1: 'text-4xl font-bold',
+        h2: 'text-3xl font-bold',
+        h3: 'text-2xl font-bold',
+        p: 'text-base',
+        div: 'block',
+        span: 'inline',
+      },
+    },
+    defaultVariants: {
+      variant: 'p',
+    },
+  }
+);
+
+export interface TypographyProps extends Omit<HTMLMotionProps<'div'>, 'variant'>, VariantProps<typeof typographyVariants> {
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span' | 'div';
+  children: React.ReactNode;
+  className?: string;
+}
+
+export const Typography = React.forwardRef<HTMLDivElement, TypographyProps>(
+  ({ as: Component = 'p', className, variant, children, ...props }, ref) => {
+    const MotionComponent = motion(Component);
+    return (
+      <MotionComponent
+        className={cn(typographyVariants({ variant, className }))}
+        ref={ref}
+        {...props}
+      >
+        {children}
+      </MotionComponent>
+    );
+  }
+);
+
+Typography.displayName = 'Typography';

@@ -45,10 +45,18 @@ export const staggerChildren = (delayBetween: number = 0.1) => ({
 /**
  * Common gradient text styles
  */
-export const gradientText = {
-  gold: 'bg-gradient-to-r from-royal-gold via-royal-bright-gold to-royal-gold bg-clip-text text-transparent',
-  royal: 'bg-gradient-to-r from-royal-midnight to-royal-deep-blue bg-clip-text text-transparent',
-  mixed: 'bg-gradient-to-r from-royal-gold via-royal-deep-blue to-royal-bright-gold bg-clip-text text-transparent',
+export const gradientText = (
+  gradient: 'gold' | 'royal' | 'mixed' | 'custom' = 'gold',
+  customGradient?: string
+) => {
+  const gradients: Record<string, string> = {
+    gold: 'bg-gradient-to-r from-royal-gold to-royal-bright-gold',
+    royal: 'bg-gradient-to-r from-royal-deep-blue to-royal-midnight',
+    mixed: 'bg-gradient-to-r from-royal-gold via-royal-deep-blue to-royal-bright-gold',
+    custom: customGradient || '',
+  }
+
+  return gradients[gradient]
 }
 
 /**

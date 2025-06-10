@@ -1,9 +1,11 @@
 'use client'
 
 import React, { forwardRef } from 'react'
-import { motion, type HTMLMotionProps } from 'framer-motion'
+import { motion, type HTMLMotionProps, MotionProps } from 'framer-motion'
 import { cn } from '../../utils/cn'
 import { glassStyles } from '../../utils/style-helpers'
+
+type CardElement = React.ElementRef<'div'>;
 
 export interface CardProps extends HTMLMotionProps<'div'> {
   variant?: 'default' | 'glass' | 'solid' | 'gradient'
@@ -12,6 +14,7 @@ export interface CardProps extends HTMLMotionProps<'div'> {
   glow?: boolean
   gradient?: 'gold' | 'royal' | 'mixed' | 'custom'
   customGradient?: string
+  children: React.ReactNode
 }
 
 const variants = {
@@ -36,7 +39,7 @@ const gradients = {
   custom: '', // Uses customGradient prop
 }
 
-const Card = forwardRef<HTMLDivElement, CardProps>(
+const Card = forwardRef<CardElement, CardProps>(
   (
     {
       className,
