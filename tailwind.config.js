@@ -1,114 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './src/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  theme: {
-    extend: {
-      colors: {
-        'royal-midnight': '#1a1a4e',
-        'royal-deep-blue': '#2d2d7f',
-        'royal-gold': '#d4af37',
-        'royal-bright-gold': '#ffd700',
-        'royal-dark': '#0a0a1f',
-        'royal-light': '#f8f8ff',
-      },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Space Grotesk', 'sans-serif'],
-      },
-      animation: {
-        'float': 'float 6s ease-in-out infinite',
-        'pulse-gold': 'pulse-gold 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'slide-up': 'slide-up 0.5s ease-out',
-        'fade-in': 'fade-in 0.5s ease-out',
-      },
-      keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-10px)' },
-        },
-        'pulse-gold': {
-          '0%, 100%': { opacity: 1 },
-          '50%': { opacity: 0.5 },
-        },
-        'slide-up': {
-          '0%': { transform: 'translateY(20px)', opacity: 0 },
-          '100%': { transform: 'translateY(0)', opacity: 1 },
-        },
-        'fade-in': {
-          '0%': { opacity: 0 },
-          '100%': { opacity: 1 },
-        },
-      },
-      backdropFilter: {
-        'none': 'none',
-        'blur': 'blur(10px)',
-      },
-    },
-  },
-  plugins: [],
-        royal: {
-          midnight: '#1a1a4e',
-          'deep-blue': '#2d2d7f',
-          gold: '#d4af37',
-          'bright-gold': '#ffd700',
-          white: '#ffffff',
-          gray: '#f5f5f5',
-          'dark-gray': '#333333',
-        },
-      },
-      backgroundImage: {
-        'gradient-primary': 'linear-gradient(135deg, #1a1a4e 0%, #2d2d7f 100%)',
-        'gradient-gold': 'linear-gradient(135deg, #d4af37 0%, #ffd700 100%)',
-        'gradient-radial': 'radial-gradient(circle at 50% 50%, #2d2d7f 0%, #1a1a4e 100%)',
-      },
-      boxShadow: {
-        'gold': '0 0 30px rgba(212, 175, 55, 0.3)',
-        'gold-hover': '0 0 40px rgba(212, 175, 55, 0.5)',
-      },
-      animation: {
-        'float': 'float 6s ease-in-out infinite',
-        'pulse-gold': 'pulse-gold 2s ease-in-out infinite',
-        'shimmer': 'shimmer 2s ease-in-out infinite',
-      },
-      keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-10px)' },
-        },
-        'pulse-gold': {
-          '0%, 100%': { opacity: '1' },
-          '50%': { opacity: '0.7' },
-        },
-        shimmer: {
-          '0%': { backgroundPosition: '-200% 0' },
-          '100%': { backgroundPosition: '200% 0' },
-        },
-      },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-      },
-      spacing: {
-        '18': '4.5rem',
-        '88': '22rem',
-        '128': '32rem',
-      },
-      screens: {
-        'xs': '475px',
-      },
-    },
-  },
-  plugins: [],
-<<<<<<< HEAD
-=======
-  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -118,6 +16,8 @@ module.exports = {
         'royal-gold': '#d4af37',
         'royal-bright-gold': '#ffd700',
         'royal-light-gold': '#ffed4e',
+        'royal-dark': '#0a0a1f',
+        'royal-light': '#f8f8ff',
       },
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
@@ -188,9 +88,7 @@ module.exports = {
     require('@tailwindcss/typography'),
     require('@tailwindcss/aspect-ratio'),
   ],
-  // Performance optimizations
   future: {
     hoverOnlyWhenSupported: true,
   },
->>>>>>> origin/main
 }
